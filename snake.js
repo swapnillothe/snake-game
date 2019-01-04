@@ -3,12 +3,13 @@ const incrementByTen = function (num) {
 }
 
 const decrementByTen = function (num) {
-  return Math.abs((num -= 10) % 500);
+  return ((num -= 10) || 500);
 }
 
 let position = { x: 100, y: 100 }
 let movement = 'x';
 let action = incrementByTen;
+let snake = [{ action, movement, position }];
 
 const getPosition = function (position) {
   console.log(position);
@@ -19,10 +20,14 @@ const formatSnake = function () {
   return `height:25px;width:25px`
 }
 
-const moveSnake = function () {
-  let block = document.getElementById('mainDiv');
+const changeSnakeHead = function () {
+  let head = document.getElementById(1);
   position[movement] = action(position[movement]);
-  block.setAttribute('style', `${getPosition(position)};`);
+  head.setAttribute('style', `${getPosition(position)};`);
+}
+
+const moveSnake = function () {
+  changeSnakeHead();
 }
 
 const moveRight = () => {
