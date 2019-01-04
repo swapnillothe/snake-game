@@ -1,24 +1,24 @@
 const addTen = function (num) {
-  return (num += 10) % 500;
+  return (num += 25) % 500;
 }
 
 const subtractTen = function (num) {
-  return ((num -= 10) || 500);
+  return ((num -= 25) || 500);
 }
 
 const increaseByTen = function (num) {
-  return (num + 10) % 500;
+  return (num + 25) % 500;
 }
 
 const decreaseByTen = function (num) {
-  return (num - 10) || 500;
+  return (num - 25) || 500;
 }
 
 let position = { x: 100, y: 100 };
 let obsPosition = { x: 400, y: 300 };
 let movement = 'x';
 let action = addTen;
-let length = 2;
+let length = 1;
 let snake = [{ action, movement, position }];
 
 const getPositionTag = function (position) {
@@ -86,16 +86,16 @@ const moveSnakeBody = function () {
     tailPart['position']['y'] = preTailPart['position']['y'];
     setAttribute(index);
   }
+  moveSnakeHead();
 }
 
 const moveSnakeHead = function () {
-  let head = document.getElementById(1);
+  let head = document.getElementById(0);
   position[movement] = action(position[movement]);
   head.setAttribute('style', `${getPositionTag(position)};`);
 }
 
 const moveSnake = function () {
-  moveSnakeHead();
   moveSnakeBody();
   moveSnakeObs();
 }
