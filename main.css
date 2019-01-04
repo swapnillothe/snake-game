@@ -4,6 +4,12 @@
   height: 25px
 }
 
+.obs{
+  background-color:black; 
+  width: 25px;
+  height: 25px
+}
+
 .board{
   width:500px;
   height: 500px;
