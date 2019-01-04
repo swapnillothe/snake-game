@@ -30,18 +30,22 @@ const moveSnakeObs = function () {
   obstacle.setAttribute('style', `${getPositionTag(obsPosition)};`);
 }
 
-
-const getLastPart = function () {
-  let action = snake[snake.length - 1]['action'];
-  let movement = snake[snake.length - 1]['movement'];
-  let position = {};
-  position['x'] = snake[snake.length - 1]['position']['x'];
-  position['y'] = snake[snake.length - 1]['position']['y'];
+const createPart = function (action, movement, position) {
   return { action, movement, position };
 }
 
-const addTail = function () {
-  snake.push(getLastPart());
+const getTail = function () {
+  let tail = snake[snake.length - 1];
+  let action = tail['action'];
+  let movement = tail['movement'];
+  let position = {};
+  position['x'] = tail['position']['x'];
+  position['y'] = tail['position']['y'];
+  return createPart(action, movement, position);
+}
+
+const addTailBody = function () {
+  snake.push(getTail());
 }
 
 const addTailBodyTag = function () {
@@ -49,27 +53,38 @@ const addTailBodyTag = function () {
   return `<div id=${id} class='snakeBody'></div>`
 }
 
-const addTailBody = function () {
+const addTail = function () {
   let snake = document.getElementById('snake');
   snake.innerHTML += `${addTailBodyTag()}`;
-  addTail();
+  addTailBody();
+}
+
+const setAttribute = function (id) {
+  let part = snake[id];
+  let position = part['position'];
+  let movement = part['movement'];
+  let bodyPart = document.getElementById(id);
+  let action = correctAction(part);
+  position[movement] = action(position[movement]);
+  bodyPart.setAttribute('style', `${getPositionTag(position)};`);
+}
+
+const correctAction = function (part) {
+  if (part['action'] == addTail) {
+    return increaseByTen;
+  }
+  return decreaseByTen;
 }
 
 const moveSnakeBody = function () {
-  for (let index = snake.length - 1; index > 1; index--) {
-    snake[index]['action'] = snake[index - 1]['action'];
-    if (snake[index - 1]['action'] == addTen) {
-      snake[index]['action'] = increaseByTen;
-    }
-    if (snake[index - 1]['action'] == subtractTen) {
-      snake[index]['action'] = decreaseByTen;
-    }
-    snake[index]['movement'] = snake[index - 1]['movement'];
-    snake[index]['position']['x'] = snake[index - 1]['position']['x'];
-    snake[index]['position']['y'] = snake[index - 1]['position']['y'];
-    let head = document.getElementById(index);
-    position[movement] = action(position[movement]);
-    head.setAttribute('style', `${getPositionTag(position)};`);
+  for (let index = snake.length - 1; index > 0; index--) {
+    let tailPart = snake[index];
+    let preTailPart = snake[index - 1];
+    tailPart['action'] = preTailPart['action'];
+    tailPart['movement'] = preTailPart['movement'];
+    tailPart['position']['x'] = preTailPart['position']['x'];
+    tailPart['position']['y'] = preTailPart['position']['y'];
+    setAttribute(index);
   }
 }
 
@@ -117,9 +132,18 @@ const updateMovement = function (event) {
   moves[key]();
 }
 
+const isSamePoint = function (p1, p2) {
+  return p1['x'] == p2['x'] && p1['y'] == p2['y'];
+}
+
+const getFood = function () {
+  let headPosition = snake[0]['position'];
+  return isSamePoint(headPosition, obsPosition);
+}
+
 setInterval(() => {
   moveSnake();
-  if (snake[0]['position']['x'] == obsPosition['x']) {
-    addTailBody();
+  if (getFood()) {
+    addTail();
   }
 }, 300);
