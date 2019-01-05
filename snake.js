@@ -14,12 +14,12 @@ const decreaseByTen = function (num) {
   return (num - 25) || 500;
 }
 
-let position = { x: 100, y: 100 };
-let obsPosition = { x: 400, y: 300 };
-let movement = 'x';
+const position = { x: 100, y: 100 };
+const obsPosition = { x: 400, y: 300 };
+let coOrdinateToChange = 'x';
 let action = addTen;
+const snake = [{ action, coOrdinateToChange, position }];
 let length = 1;
-let snake = [{ action, movement, position }];
 
 const getPositionTag = function (position) {
   return `position:fixed;top:${position['x']}px;left:${position['y']}px`
@@ -30,16 +30,16 @@ const moveSnakeObs = function () {
   obstacle.setAttribute('style', `${getPositionTag(obsPosition)};`);
 }
 
-const createPart = function (action, movement, position) {
-  return { action, movement, position};
+const createPart = function (action, coOrdinateToChange, position) {
+  return { action, coOrdinateToChange, position };
 }
 
 const getTail = function () {
   let tail = snake[snake.length - 1];
   let action = tail['action'];
-  let movement = tail['movement'];
+  let coOrdinateToChange = tail['coOrdinateToChange'];
   let position = {};
-  return createPart(action, movement, position);
+  return createPart(action, coOrdinateToChange, position);
 }
 
 const addTailBody = function () {
@@ -61,10 +61,10 @@ const addTail = function () {
 const setAttribute = function (id) {
   let part = snake[id];
   let position = part['position'];
-  let movement = part['movement'];
+  let coOrdinateToChange = part['coOrdinateToChange'];
   let bodyPart = document.getElementById(id);
   let action = getCorrectedAction(part);
-  position[movement] = action(position[movement]);
+  position[coOrdinateToChange] = action(position[coOrdinateToChange]);
   bodyPart.setAttribute('style', `${getPositionTag(position)};`);
 }
 
@@ -80,8 +80,8 @@ const moveSnakeBody = function () {
     let tailPart = snake[index];
     let preTailPart = snake[index - 1];
     tailPart['action'] = preTailPart['action'];
-    tailPart['movement'] = preTailPart['movement'];
-    tailPart['position']['x'] = preTailPart['position']['x']+25;
+    tailPart['coOrdinateToChange'] = preTailPart['coOrdinateToChange'];
+    tailPart['position']['x'] = preTailPart['position']['x'] + 25;
     tailPart['position']['y'] = preTailPart['position']['y'];
     setAttribute(index);
   }
@@ -89,7 +89,7 @@ const moveSnakeBody = function () {
 
 const moveSnakeHead = function () {
   let head = document.getElementById(0);
-  position[movement] = action(position[movement]);
+  position[coOrdinateToChange] = action(position[coOrdinateToChange]);
   head.setAttribute('style', `${getPositionTag(position)};`);
 }
 
@@ -100,22 +100,22 @@ const moveSnake = function () {
 }
 
 const moveRight = () => {
-  movement = 'y';
+  coOrdinateToChange = 'y';
   action = addTen;
 }
 
 const moveDown = () => {
-  movement = 'x';
+  coOrdinateToChange = 'x';
   action = addTen;
 }
 
 const moveUp = () => {
-  movement = 'x';
+  coOrdinateToChange = 'x';
   action = subtractTen;
 }
 
 const moveLeft = () => {
-  movement = 'y';
+  coOrdinateToChange = 'y';
   action = subtractTen;
 }
 
