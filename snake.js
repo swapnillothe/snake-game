@@ -31,7 +31,7 @@ const moveSnakeObs = function () {
 }
 
 const createPart = function (action, movement, position) {
-  return { action, movement, position };
+  return { action, movement, position};
 }
 
 const getTail = function () {
@@ -39,13 +39,12 @@ const getTail = function () {
   let action = tail['action'];
   let movement = tail['movement'];
   let position = {};
-  position['x'] = tail['position']['x'];
-  position['y'] = tail['position']['y'];
   return createPart(action, movement, position);
 }
 
 const addTailBody = function () {
-  snake.push(getTail());
+  const newTail = getTail();
+  snake.push(newTail);
 }
 
 const addTailBodyTag = function () {
@@ -64,12 +63,12 @@ const setAttribute = function (id) {
   let position = part['position'];
   let movement = part['movement'];
   let bodyPart = document.getElementById(id);
-  let action = correctAction(part);
+  let action = getCorrectedAction(part);
   position[movement] = action(position[movement]);
   bodyPart.setAttribute('style', `${getPositionTag(position)};`);
 }
 
-const correctAction = function (part) {
+const getCorrectedAction = function (part) {
   if (part['action'] == addTail) {
     return increaseByTen;
   }
@@ -82,11 +81,10 @@ const moveSnakeBody = function () {
     let preTailPart = snake[index - 1];
     tailPart['action'] = preTailPart['action'];
     tailPart['movement'] = preTailPart['movement'];
-    tailPart['position']['x'] = preTailPart['position']['x'];
+    tailPart['position']['x'] = preTailPart['position']['x']+25;
     tailPart['position']['y'] = preTailPart['position']['y'];
     setAttribute(index);
   }
-  moveSnakeHead();
 }
 
 const moveSnakeHead = function () {
@@ -98,6 +96,7 @@ const moveSnakeHead = function () {
 const moveSnake = function () {
   moveSnakeBody();
   moveSnakeObs();
+  moveSnakeHead();
 }
 
 const moveRight = () => {
@@ -142,8 +141,8 @@ const getFood = function () {
 }
 
 setInterval(() => {
-  moveSnake();
   if (getFood()) {
     addTail();
   }
+  moveSnake();
 }, 300);

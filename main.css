@@ -4,6 +4,12 @@
   height: 25px
 }
 
+.snakeHead{
+  background-color:brown; 
+  width: 25px;
+  height: 25px
+}
+
 .obs{
   background-color:black; 
   width: 25px;
