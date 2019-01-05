@@ -14,8 +14,13 @@ const decreaseByTen = function (num) {
   return (num - 25) || 500;
 }
 
+const getRandomCoOrdinate = function () {
+  let random = (Math.ceil(Math.random() * 11)) * 25;
+  return random;
+}
+
 const position = { x: 100, y: 100 };
-const obsPosition = { x: 400, y: 300 };
+const obstaclePosition = {};
 let coOrdinateToChange = 'x';
 let action = addTen;
 const snake = [{ action, coOrdinateToChange, position }];
@@ -25,9 +30,11 @@ const getPositionTag = function (position) {
   return `position:fixed;top:${position['x']}px;left:${position['y']}px`
 }
 
-const moveSnakeObs = function () {
+const moveSnakeObstacle = function () {
   let obstacle = document.getElementById('obstacle');
-  obstacle.setAttribute('style', `${getPositionTag(obsPosition)};`);
+  obstaclePosition['x'] = getRandomCoOrdinate();
+  obstaclePosition['y'] = getRandomCoOrdinate();
+  obstacle.setAttribute('style', `${getPositionTag(obstaclePosition)};`);
 }
 
 const createPart = function (action, coOrdinateToChange, position) {
@@ -48,12 +55,12 @@ const addTailBody = function () {
 }
 
 const addTailBodyTag = function () {
-  let id = length++;
+  const id = length++;
   return `<div id=${id} class='snakeBody'></div>`
 }
 
 const addTail = function () {
-  let snake = document.getElementById('snake');
+  const snake = document.getElementById('snake');
   snake.innerHTML += `${addTailBodyTag()}`;
   addTailBody();
 }
@@ -95,7 +102,6 @@ const moveSnakeHead = function () {
 
 const moveSnake = function () {
   moveSnakeBody();
-  moveSnakeObs();
   moveSnakeHead();
 }
 
@@ -137,12 +143,16 @@ const isSamePoint = function (p1, p2) {
 
 const getFood = function () {
   let headPosition = snake[0]['position'];
-  return isSamePoint(headPosition, obsPosition);
+  return isSamePoint(headPosition, obstaclePosition);
 }
 
-setInterval(() => {
-  if (getFood()) {
-    addTail();
-  }
-  moveSnake();
-}, 300);
+let startGame = () => {
+  moveSnakeObstacle();
+  setInterval(() => {
+    if (getFood()) {
+      addTail();
+      moveSnakeObstacle();
+    }
+    moveSnake();
+  }, 300);
+}

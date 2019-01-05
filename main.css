@@ -10,13 +10,22 @@
   height: 25px
 }
 
-.obs{
+.obstacle{
   width: 25px;
-  height: 25px
+  height: 25px;
+  position: fixed;
 }
 
 .board{
   width:500px;
   height: 500px;
   background-color: aqua
+}
+
+.startButton{
+  width:50px;
+  height: 50px;
+  border: 1px black;
+  background-color:brown;
+  text-align: center;
 }

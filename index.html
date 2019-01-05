@@ -8,11 +8,13 @@
   </canvas>
 </head>
 
+
 <body onkeydown='updateMovement(event)'>
+  <button class='startButton' onclick='startGame()'>start game</button>
   <div class='board'>
     <div id="snake">
-      <div id='obstacle' class='obstacle'> 
-        <img src="/snakeImage.jpg" alt="snake">
+      <div id='obstacle'>
+        <img src='snakeImage.jpg' class='obstacle' alt="caterPillar">
       </div>
       <div id=0 class='snakeHead'></div>
     </div>
