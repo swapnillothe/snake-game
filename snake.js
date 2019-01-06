@@ -1,17 +1,26 @@
 const addTen = function (num) {
-  return (num += 25) % 500;
+  return (num += 25) % 675;
 }
 
 const subtractTen = function (num) {
-  return ((num -= 25) || 500);
+  if ((num) == 0) {
+    return num = 650;
+  }
+  return ((num -= 25));
 }
 
 const increaseByTen = function (num) {
-  return (num + 25) % 500;
+  if (num == 675) {
+    return 0;
+  }
+  return (num + 25) % 675;
 }
 
 const decreaseByTen = function (num) {
-  return (num - 25) || 500;
+  if ((num) == 0) {
+    return 675;
+  }
+  return (num - 25);
 }
 
 const getRandomCoOrdinate = function () {
@@ -20,21 +29,21 @@ const getRandomCoOrdinate = function () {
 }
 
 const position = { x: 100, y: 100 };
-const obstaclePosition = {};
+const foodPosition = {};
 let coOrdinateToChange = 'x';
 let action = addTen;
 const snake = [{ action, coOrdinateToChange, position }];
 let length = 1;
 
 const getPositionTag = function (position) {
-  return `position:fixed;top:${position['x']}px;left:${position['y']}px`
+  return `position:relative;top:${position['x']}px;left:${position['y']}px`
 }
 
-const moveSnakeObstacle = function () {
-  let obstacle = document.getElementById('obstacle');
-  obstaclePosition['x'] = getRandomCoOrdinate();
-  obstaclePosition['y'] = getRandomCoOrdinate();
-  obstacle.setAttribute('style', `${getPositionTag(obstaclePosition)};`);
+const moveSnakeFood = function () {
+  let food = document.getElementById('food');
+  foodPosition['x'] = getRandomCoOrdinate();
+  foodPosition['y'] = getRandomCoOrdinate();
+  food.setAttribute('style', `${getPositionTag(foodPosition)};`);
 }
 
 const createPart = function (action, coOrdinateToChange, position) {
@@ -76,7 +85,7 @@ const setAttribute = function (id) {
 }
 
 const getCorrectedAction = function (part) {
-  if (part['action'] == addTail) {
+  if (part['action'] == addTen) {
     return increaseByTen;
   }
   return decreaseByTen;
@@ -88,7 +97,7 @@ const moveSnakeBody = function () {
     let preTailPart = snake[index - 1];
     tailPart['action'] = preTailPart['action'];
     tailPart['coOrdinateToChange'] = preTailPart['coOrdinateToChange'];
-    tailPart['position']['x'] = preTailPart['position']['x'] + 25;
+    tailPart['position']['x'] = preTailPart['position']['x']-50;
     tailPart['position']['y'] = preTailPart['position']['y'];
     setAttribute(index);
   }
@@ -143,16 +152,16 @@ const isSamePoint = function (p1, p2) {
 
 const getFood = function () {
   let headPosition = snake[0]['position'];
-  return isSamePoint(headPosition, obstaclePosition);
+  return isSamePoint(headPosition, foodPosition);
 }
 
 let startGame = () => {
-  moveSnakeObstacle();
+  moveSnakeFood();
   setInterval(() => {
     if (getFood()) {
       addTail();
-      moveSnakeObstacle();
+      moveSnakeFood();
     }
     moveSnake();
-  }, 300);
+  }, 100);
 }

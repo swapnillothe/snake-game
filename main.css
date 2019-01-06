@@ -10,16 +10,18 @@
   height: 25px
 }
 
-.obstacle{
+.food{
   width: 25px;
   height: 25px;
   position: fixed;
 }
 
 .board{
-  width:500px;
-  height: 500px;
-  background-color: aqua
+  width:675px;
+  height: 675px;
+  margin:auto;
+  border: solid 10px;
+  background-color: rgb(140, 245, 126)
 }
 
 .startButton{
@@ -28,4 +30,5 @@
   border: 1px black;
   background-color:brown;
   text-align: center;
+  align:center;
 }
