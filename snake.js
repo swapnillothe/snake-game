@@ -1,12 +1,12 @@
 const addTen = function (num) {
-  return (num += 25) % 675;
+  return (num = num + 25) % 675;
 }
 
 const subtractTen = function (num) {
-  if ((num) == 0) {
+  if (num == 0) {
     return num = 650;
   }
-  return ((num -= 25));
+  return num = num - 25;
 }
 
 const increaseByTen = function (num) {
@@ -17,7 +17,7 @@ const increaseByTen = function (num) {
 }
 
 const decreaseByTen = function (num) {
-  if ((num) == 0) {
+  if (num == 0) {
     return 675;
   }
   return (num - 25);
@@ -28,12 +28,12 @@ const getRandomCoOrdinate = function () {
   return random;
 }
 
-const position = { x: 100, y: 100 };
+const position = { x: 0, y: 0 };
 const foodPosition = {};
 let coOrdinateToChange = 'x';
 let action = addTen;
-const snake = [{ action, coOrdinateToChange, position }];
-let length = 1;
+const snakeHead = { action, coOrdinateToChange, position };
+const snake = [snakeHead];
 
 const getPositionTag = function (position) {
   return `position:relative;top:${position['x']}px;left:${position['y']}px`
@@ -64,7 +64,7 @@ const addTailBody = function () {
 }
 
 const addTailBodyTag = function () {
-  const id = length++;
+  const id = snake.length;
   return `<div id=${id} class='snakeBody'></div>`
 }
 
@@ -97,7 +97,7 @@ const moveSnakeBody = function () {
     let preTailPart = snake[index - 1];
     tailPart['action'] = preTailPart['action'];
     tailPart['coOrdinateToChange'] = preTailPart['coOrdinateToChange'];
-    tailPart['position']['x'] = preTailPart['position']['x']-50;
+    tailPart['position']['x'] = preTailPart['position']['x'] - 50;
     tailPart['position']['y'] = preTailPart['position']['y'];
     setAttribute(index);
   }
@@ -155,7 +155,7 @@ const getFood = function () {
   return isSamePoint(headPosition, foodPosition);
 }
 
-let startGame = () => {
+const startGame = () => {
   moveSnakeFood();
   setInterval(() => {
     if (getFood()) {
