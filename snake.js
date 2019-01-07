@@ -1,30 +1,24 @@
-const BOUNDARY = 675;
+const BOUNDARY = 625;
 const TWENTYFIVE = 25;
 
 const addTwentyFive = function (num) {
-  return num = (num + TWENTYFIVE) % BOUNDARY;
+  return num = num + TWENTYFIVE;
 }
 
 const subtractTwentyFive = function (num) {
-  if (num == 0) {
-    return num = 650;
-  }
   return num = num - TWENTYFIVE;
 }
 
 const increaseByTwentyFive = function (num) {
-  return (num + TWENTYFIVE) % BOUNDARY;
+  return num + TWENTYFIVE;
 }
 
 const decreaseByTwentyFive = function (num) {
-  if (num == 0) {
-    return BOUNDARY;
-  }
   return (num - TWENTYFIVE);
 }
 
 const getValidCoOrdinate = function (action, num) {
-  let validCoOrdinate = action(num) % BOUNDARY;
+  let validCoOrdinate = action(num);
   return validCoOrdinate;
 }
 
@@ -161,23 +155,48 @@ const isSamePoint = function (p1, p2) {
 }
 
 const getFood = function () {
-  let headPosition = snake[0]['position'];
+  let headPosition = getPosition(snake[0]);
   return isSamePoint(headPosition, foodPosition);
 }
 
-const end = function () {
-  let headPosition = snake[0]['position'];
-  let snakeBody = snake.slice(3).map(x => x['position']);
-  console.log(headPosition, snakeBody, snake);
-  console.log(snakeBody.some(isSamePoint.bind(null, headPosition)));
+const hasTouchBody = () => {
+  let headPosition = getPosition(snake[0]);
+  let snakeBody = snake.slice(3).map(getPosition);
   return snakeBody.some(isSamePoint.bind(null, headPosition));
+}
+
+const hasNegativeCoOrdinate = function (element) {
+  return element['x'] < 0 || element['y'] < 0;
+}
+
+const isOutOfGround = function (element) {
+  return element['x'] > BOUNDARY || element['y'] > BOUNDARY;
+}
+
+const isOutOfBoundary = function () {
+  let headPosition = getPosition(snake[0]);
+  return hasNegativeCoOrdinate(headPosition) || isOutOfGround(headPosition);
+}
+
+const end = function () {
+  return isOutOfBoundary()
+}
+
+const ENDGAMEMSG = 'you killed snake by touching wall compound';
+
+const formatMsg = function () {
+  return `<div class='endGameMsg'></div>`;
+}
+
+const showEndMsg = () => {
+  board.innerText = board.innerText + ENDGAMEMSG;
 }
 
 const startGame = () => {
   moveSnakeFood();
   const runSnake = setInterval(() => {
     if (getFood()) { addTail(); moveSnakeFood(); };
-    // if (end()) { clearInterval(endGameId) };
+    if (end()) { showEndMsg(); clearInterval(runSnake) };
     moveSnake();
   }, 100);
 }

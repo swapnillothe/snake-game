@@ -30,5 +30,9 @@
   border: 1px black;
   background-color:brown;
   text-align: center;
-  align:center;
+  align: center;
+}
+
+.endGameMsg{
+  text-align: center;
 }
