@@ -1,11 +1,13 @@
 .snakeBody{
-  background-color:black; 
+  background-color:black;
+  border-radius: 50%; 
   width: 25px;
   height: 25px
 }
 
 .snakeHead{
-  background-color:brown; 
+  background-color:brown;
+  border-radius: 50%;  
   width: 25px;
   height: 25px
 }
@@ -14,6 +16,7 @@
   width: 25px;
   height: 25px;
   position: fixed;
+  border-radius: 50%;  
 }
 
 .board{
@@ -25,14 +28,10 @@
 }
 
 .startButton{
-  width:50px;
+  width:1000px;
   height: 50px;
   border: 1px black;
-  background-color:brown;
+  background-color:antiquewhite;
   text-align: center;
-  align: center;
-}
-
-.endGameMsg{
-  text-align: center;
+  font-size: 30px;
 }
