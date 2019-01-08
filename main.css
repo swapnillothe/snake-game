@@ -27,11 +27,19 @@
   background-color: rgb(140, 245, 126)
 }
 
-.startButton{
-  width:1000px;
+.buttons{
+  display: flex;
+  justify-content: space-between;
+  width: 711px;
+  margin-left: 138px;
+  margin-top: 20px;
+}
+
+.button{
+  width:100px;
   height: 50px;
   border: 1px black;
   background-color:antiquewhite;
   text-align: center;
-  font-size: 30px;
+  font-size: 20px;
 }

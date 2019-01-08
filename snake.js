@@ -11,7 +11,6 @@ const subtractTwentyFive = function (num) {
 
 const increaseByTwentyFive = num => num + TWENTYFIVE;
 const decreaseByTwentyFive = num => num - TWENTYFIVE;
-const getValidCoOrdinate = (action, num) => action(num);
 const getRandomCoOrdinate = () => (Math.ceil(Math.random() * 11)) * TWENTYFIVE;
 const getPosition = element => element['position'];
 const getAction = element => element['action'];
@@ -64,13 +63,13 @@ const addTail = function () {
 }
 
 const setAttribute = function (id) {
-  let part = snake[id];
-  let position = getPosition(part);
-  let coOrdinateToChange = getCoOrdinateToChange(part);
+  let snakePart = snake[id];
+  let position = getPosition(snakePart);
+  let coOrdinateToChange = getCoOrdinateToChange(snakePart);
   let bodyPart = document.getElementById(id);
-  let action = getCorrectedAction(part);
+  let action = getCorrectedAction(snakePart);
 
-  position[coOrdinateToChange] = getValidCoOrdinate(action, position[coOrdinateToChange]);
+  position[coOrdinateToChange] = action(position[coOrdinateToChange]);
   bodyPart.setAttribute('style', `${getPositionTag(position)};`);
 }
 
@@ -83,22 +82,25 @@ const getCorrectedAction = function (part) {
   return decreaseByTwentyFive;
 }
 
+const transferData = function (list1, list2) {
+  const position1 = getPosition(list1)
+  const position2 = getPosition(list2);
+  list1['action'] = getAction(list2);
+  list1['coOrdinateToChange'] = getCoOrdinateToChange(list2);
+  position1['x'] = position2['x'] - 50;
+  position1['y'] = position2['y'];
+}
+
 const moveSnakeBody = function () {
   for (let index = snake.length - 1; index > 0; index--) {
-    let tailPart = snake[index];
-    let preTailPart = snake[index - 1];
-    const preTailPartPosition = getPosition(preTailPart);
-    tailPart['action'] = getAction(preTailPart);
-    tailPart['coOrdinateToChange'] = getCoOrdinateToChange(preTailPart);
-    tailPart['position']['x'] = preTailPartPosition['x'] - 50;
-    tailPart['position']['y'] = preTailPartPosition['y'];
+    transferData(snake[index], snake[index - 1]);
     setAttribute(index);
   }
 }
 
 const moveSnakeHead = function () {
   let head = document.getElementById(0);
-  position[coOrdinateToChange] = getValidCoOrdinate(action, position[coOrdinateToChange]);
+  position[coOrdinateToChange] = action(position[coOrdinateToChange]);
   head.setAttribute('style', `${getPositionTag(position)};`);
 }
 
@@ -115,8 +117,7 @@ const moves = {
   ArrowLeft: moveLeft
 }
 
-const updateMovement = event => moves[event.key]();
-
+const updateMove = event => moves[event.key]();
 const isSamePoint = (p1, p2) => p1['x'] == p2['x'] && p1['y'] == p2['y'];
 
 const getFood = function () {
