@@ -1,23 +1,23 @@
 const BOUNDARY = 625;
 const TWENTYFIVE = 25;
 
-const addTwentyFive = function (num) {
-  return num = num + TWENTYFIVE;
-}
-
-const subtractTwentyFive = function (num) {
-  return num = num - TWENTYFIVE;
-}
-
-const increaseByTwentyFive = num => num + TWENTYFIVE;
-const decreaseByTwentyFive = num => num - TWENTYFIVE;
+/* supportive functions */
+const addTwentyFive = num => num + TWENTYFIVE;
+const subtractTwentyFive = num => num - TWENTYFIVE;
 const getRandomCoOrdinate = () => (Math.ceil(Math.random() * 11)) * TWENTYFIVE;
 const getPosition = element => element['position'];
 const getAction = element => element['action'];
 const getCoOrdinateToChange = element => element['coOrdinateToChange'];
+const moveSnake = function () { moveSnakeBody(); moveSnakeHead() }
+const moveRight = () => { coOrdinateToChange = 'y'; action = addTwentyFive }
+const moveDown = () => { coOrdinateToChange = 'x'; action = addTwentyFive }
+const moveUp = () => { coOrdinateToChange = 'x'; action = subtractTwentyFive }
+const moveLeft = () => { coOrdinateToChange = 'y'; action = subtractTwentyFive }
+const getCurrentTailDetail = () => snake[snake.length - 1];
+
+/*Global variables */
 
 const position = { x: 0, y: 0 };
-const foodPosition = {};
 let coOrdinateToChange = 'x';
 let action = addTwentyFive;
 const snakeHead = { action, coOrdinateToChange, position };
@@ -27,8 +27,8 @@ const getPositionTag = function (position) {
   return `position:relative;top:${position['x']}px;left:${position['y']}px`
 }
 
-const moveSnakeFood = function () {
-  let food = document.getElementById('food');
+const moveSnakeFood = function (foodPosition) {
+  const food = document.getElementById('food');
   foodPosition['x'] = getRandomCoOrdinate();
   foodPosition['y'] = getRandomCoOrdinate();
   food.setAttribute('style', `${getPositionTag(foodPosition)};`);
@@ -38,17 +38,17 @@ const createPart = function (action, coOrdinateToChange, position) {
   return { action, coOrdinateToChange, position };
 }
 
-const getTail = function () {
-  let tail = snake[snake.length - 1];
-  let action = getAction(tail);
-  let coOrdinateToChange = getCoOrdinateToChange(tail);
-  let position = {};
+
+const getTailDetail = function () {
+  const tail = getCurrentTailDetail();
+  const action = getAction(tail);
+  const coOrdinateToChange = getCoOrdinateToChange(tail);
+  const position = {};
   return createPart(action, coOrdinateToChange, position);
 }
 
 const addTailBody = function () {
-  const newTail = getTail();
-  snake.push(newTail);
+  snake.push(getTailDetail());
 }
 
 const addTailBodyTag = function () {
@@ -62,39 +62,30 @@ const addTail = function () {
   addTailBody();
 }
 
-const setAttribute = function (id) {
-  let snakePart = snake[id];
-  let position = getPosition(snakePart);
-  let coOrdinateToChange = getCoOrdinateToChange(snakePart);
-  let bodyPart = document.getElementById(id);
-  let action = getCorrectedAction(snakePart);
-
+const setSnakePartAttribute = function (id) {
+  const snakePart = snake[id];
+  const position = getPosition(snakePart);
+  const coOrdinateToChange = getCoOrdinateToChange(snakePart);
+  const bodyPart = document.getElementById(id);
+  const action = getAction(snakePart);
+  
   position[coOrdinateToChange] = action(position[coOrdinateToChange]);
   bodyPart.setAttribute('style', `${getPositionTag(position)};`);
 }
 
-const isActionAddTwentyFive = (action) => action == addTwentyFive;
-
-const getCorrectedAction = function (part) {
-  if (isActionAddTwentyFive(getAction(part))) {
-    return increaseByTwentyFive;
-  }
-  return decreaseByTwentyFive;
-}
-
-const transferData = function (list1, list2) {
-  const position1 = getPosition(list1)
-  const position2 = getPosition(list2);
-  list1['action'] = getAction(list2);
-  list1['coOrdinateToChange'] = getCoOrdinateToChange(list2);
+const circulateSnakePartData = function (data1, data2) {
+  const position1 = getPosition(data1)
+  const position2 = getPosition(data2);
+  data1['action'] = getAction(data2);
+  data1['coOrdinateToChange'] = getCoOrdinateToChange(data2);
   position1['x'] = position2['x'] - 50;
   position1['y'] = position2['y'];
 }
 
 const moveSnakeBody = function () {
   for (let index = snake.length - 1; index > 0; index--) {
-    transferData(snake[index], snake[index - 1]);
-    setAttribute(index);
+    circulateSnakePartData(snake[index], snake[index - 1]);
+    setSnakePartAttribute(index);
   }
 }
 
@@ -103,12 +94,6 @@ const moveSnakeHead = function () {
   position[coOrdinateToChange] = action(position[coOrdinateToChange]);
   head.setAttribute('style', `${getPositionTag(position)};`);
 }
-
-const moveSnake = function () { moveSnakeBody(); moveSnakeHead() }
-const moveRight = () => { coOrdinateToChange = 'y'; action = addTwentyFive }
-const moveDown = () => { coOrdinateToChange = 'x'; action = addTwentyFive }
-const moveUp = () => { coOrdinateToChange = 'x'; action = subtractTwentyFive }
-const moveLeft = () => { coOrdinateToChange = 'y'; action = subtractTwentyFive }
 
 const moves = {
   ArrowRight: moveRight,
@@ -120,8 +105,9 @@ const moves = {
 const updateMove = event => moves[event.key]();
 const isSamePoint = (p1, p2) => p1['x'] == p2['x'] && p1['y'] == p2['y'];
 
-const getFood = function () {
-  let headPosition = getPosition(snake[0]);
+const hasEatenFood = function (foodPosition) {
+  const snakeHead = snake[0];
+  const headPosition = getPosition(snakeHead);
   return isSamePoint(headPosition, foodPosition);
 }
 
@@ -135,11 +121,11 @@ const hasNegativeCoOrdinate = element => (element['x'] < 0 || element['y'] < 0);
 const isOutOfGround = element => (element['x'] > BOUNDARY || element['y'] > BOUNDARY);
 
 const isOutOfBoundary = function () {
-  let headPosition = getPosition(snake[0]);
+  const headPosition = getPosition(snake[0]);
   return hasNegativeCoOrdinate(headPosition) || isOutOfGround(headPosition);
 }
 
-const end = () => isOutOfBoundary();
+const hasTouchedWall = () => isOutOfBoundary();
 
 const ENDGAMEMSG = 'You killed SNAKE by touching wall compound';
 
@@ -148,10 +134,11 @@ const showEndMsg = () => {
 }
 
 const startGame = () => {
-  moveSnakeFood();
+  const foodPosition = {};
+  moveSnakeFood(foodPosition);
   const runSnake = setInterval(() => {
-    if (getFood()) { addTail(); moveSnakeFood(); };
-    if (end()) { showEndMsg(); clearInterval(runSnake) };
+    if (hasEatenFood(foodPosition)) { addTail(); moveSnakeFood(foodPosition); };
+    if (hasTouchedWall()) { showEndMsg(); clearInterval(runSnake) };
     moveSnake();
   }, 100);
 }
